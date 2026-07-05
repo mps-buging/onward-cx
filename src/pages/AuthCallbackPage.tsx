@@ -8,18 +8,18 @@ export function AuthCallbackPage() {
   useEffect(() => {
     const code = new URLSearchParams(window.location.search).get("code")
 
-    if (!code) {
-      navigate("/login", { replace: true })
-      return
+    if (code) {
+      // PKCE flow: exchange code for session
+      supabase.auth.exchangeCodeForSession(code).then(({ error }) => {
+        navigate(error ? "/login?error=auth_failed" : "/dashboard", { replace: true })
+      })
+    } else {
+      // Implicit flow: supabase-js processes the hash fragment automatically on init,
+      // so getSession() will already have the session by the time this runs
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        navigate(session ? "/dashboard" : "/login", { replace: true })
+      })
     }
-
-    supabase.auth.exchangeCodeForSession(code).then(({ error }) => {
-      if (error) {
-        navigate("/login?error=auth_failed", { replace: true })
-      } else {
-        navigate("/dashboard", { replace: true })
-      }
-    })
   }, [navigate])
 
   return (
