@@ -5,9 +5,11 @@ export type Client = {
   name: string
   company: string
   status: ClientStatus
-  milestonesCompleted: number
-  milestonesTotal: number
-  dueDate: string
+  workspace_id?: string
+  milestonesCompleted?: number
+  milestonesTotal?: number
+  dueDate?: string
+  created_at?: string
 }
 
 export const mockClients: Client[] = [

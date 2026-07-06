@@ -19,12 +19,21 @@ const statusConfig: Record<ClientStatus, { label: string; className: string }> =
 
 export function ClientCard({ client }: { client: Client }) {
   const { label, className } = statusConfig[client.status]
-  const progress = Math.round((client.milestonesCompleted / client.milestonesTotal) * 100)
-  const dueDate = new Date(client.dueDate).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  })
+
+  const hasMillestones =
+    client.milestonesTotal !== undefined && client.milestonesTotal > 0
+  const progress = hasMillestones
+    ? Math.round(((client.milestonesCompleted ?? 0) / client.milestonesTotal!) * 100)
+    : 0
+
+  const dueDate =
+    client.dueDate
+      ? new Date(client.dueDate).toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+          year: "numeric",
+        })
+      : null
 
   return (
     <Card className="shadow-none">
@@ -39,20 +48,22 @@ export function ClientCard({ client }: { client: Client }) {
           </span>
         </div>
 
-        <div className="flex flex-col gap-1.5">
-          <div className="flex items-center justify-between text-xs text-muted-foreground">
-            <span>Milestones</span>
-            <span>{client.milestonesCompleted} of {client.milestonesTotal}</span>
+        {hasMillestones && (
+          <div className="flex flex-col gap-1.5">
+            <div className="flex items-center justify-between text-xs text-muted-foreground">
+              <span>Milestones</span>
+              <span>{client.milestonesCompleted} of {client.milestonesTotal}</span>
+            </div>
+            <div className="h-1.5 w-full overflow-hidden rounded-full bg-border">
+              <div
+                className="h-full rounded-full bg-primary transition-all"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
           </div>
-          <div className="h-1.5 w-full overflow-hidden rounded-full bg-border">
-            <div
-              className="h-full rounded-full bg-primary transition-all"
-              style={{ width: `${progress}%` }}
-            />
-          </div>
-        </div>
+        )}
 
-        <p className="text-xs text-muted-foreground">Due {dueDate}</p>
+        {dueDate && <p className="text-xs text-muted-foreground">Due {dueDate}</p>}
       </CardContent>
     </Card>
   )
