@@ -6,20 +6,28 @@ export function AuthCallbackPage() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    const code = new URLSearchParams(window.location.search).get("code")
+    // Implicit flow: supabase-js processes the #access_token hash on init and
+    // fires SIGNED_IN. Listen for it, then fall back to getSession() for
+    // the case where the session was already set before this component mounted.
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "SIGNED_IN" && session) {
+        navigate("/dashboard", { replace: true })
+      }
+    })
 
-    if (code) {
-      // PKCE flow: exchange code for session
-      supabase.auth.exchangeCodeForSession(code).then(({ error }) => {
-        navigate(error ? "/login?error=auth_failed" : "/dashboard", { replace: true })
-      })
-    } else {
-      // Implicit flow: supabase-js processes the hash fragment automatically on init,
-      // so getSession() will already have the session by the time this runs
-      supabase.auth.getSession().then(({ data: { session } }) => {
-        navigate(session ? "/dashboard" : "/login", { replace: true })
-      })
-    }
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) navigate("/dashboard", { replace: true })
+      else {
+        // Give onAuthStateChange a moment to fire before giving up
+        setTimeout(() => {
+          supabase.auth.getSession().then(({ data: { session } }) => {
+            navigate(session ? "/dashboard" : "/login?error=auth_failed", { replace: true })
+          })
+        }, 2000)
+      }
+    })
+
+    return () => subscription.unsubscribe()
   }, [navigate])
 
   return (
