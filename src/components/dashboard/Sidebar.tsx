@@ -2,7 +2,7 @@ import { LayoutDashboard, LogOut, Moon, Settings, Sun } from "lucide-react"
 import { Link, useLocation, useNavigate } from "react-router-dom"
 import { cn } from "@/lib/utils"
 import { supabase } from "@/lib/supabase"
-import type { Theme } from "@/hooks/useTheme"
+import { useThemeContext } from "@/context/ThemeContext"
 
 function NavBtn({
   icon: Icon,
@@ -39,9 +39,10 @@ function NavBtn({
   )
 }
 
-export function Sidebar({ theme, onToggleTheme }: { theme: Theme; onToggleTheme: () => void }) {
+export function Sidebar() {
   const { pathname } = useLocation()
   const navigate = useNavigate()
+  const { theme, toggleTheme } = useThemeContext()
 
   async function handleLogout() {
     await supabase.auth.signOut()
@@ -61,14 +62,19 @@ export function Sidebar({ theme, onToggleTheme }: { theme: Theme; onToggleTheme:
           to="/dashboard"
           active={pathname === "/dashboard" || pathname.startsWith("/clients")}
         />
-        <NavBtn icon={Settings} label="Settings" to="/settings" active={pathname === "/settings"} />
+        <NavBtn
+          icon={Settings}
+          label="Settings"
+          to="/settings"
+          active={pathname === "/settings"}
+        />
       </nav>
 
       <div className="flex flex-col items-center gap-1">
         <NavBtn
           icon={theme === "dark" ? Sun : Moon}
           label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
-          onClick={onToggleTheme}
+          onClick={toggleTheme}
         />
         <NavBtn icon={LogOut} label="Log out" onClick={handleLogout} />
       </div>

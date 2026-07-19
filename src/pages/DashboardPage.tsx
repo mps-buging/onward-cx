@@ -6,12 +6,12 @@ import { BottomNav } from "@/components/dashboard/BottomNav"
 import { ClientCard } from "@/components/dashboard/ClientCard"
 import { EmptyState } from "@/components/dashboard/EmptyState"
 import { AddClientModal } from "@/components/dashboard/AddClientModal"
-import { useTheme } from "@/hooks/useTheme"
+import { useThemeContext } from "@/context/ThemeContext"
 import { useWorkspace } from "@/hooks/useWorkspace"
 import { useClients } from "@/hooks/useClients"
 
 export function DashboardPage() {
-  const { theme, toggleTheme } = useTheme()
+  const { theme, toggleTheme } = useThemeContext()
   const { workspaceId, loading: wsLoading } = useWorkspace()
   const { clients, loading: clientsLoading, refetch } = useClients(workspaceId)
   const [modalOpen, setModalOpen] = useState(false)
@@ -20,7 +20,7 @@ export function DashboardPage() {
 
   return (
     <div className="flex h-screen overflow-hidden bg-background">
-      <Sidebar theme={theme} onToggleTheme={toggleTheme} />
+      <Sidebar />
 
       <div className="flex min-h-0 flex-1 flex-col">
         <header className="flex h-14 shrink-0 items-center justify-between border-b border-border px-4 md:px-6">
@@ -39,7 +39,7 @@ export function DashboardPage() {
               size="sm"
               className="gap-1.5"
               onClick={() => setModalOpen(true)}
-              disabled={!workspaceId}
+              disabled={loading || !workspaceId}
             >
               <Plus className="size-4" />
               Add client

@@ -4,6 +4,7 @@ import { SignupPage } from "@/pages/SignupPage"
 import { LoginPage } from "@/pages/LoginPage"
 import { DashboardPage } from "@/pages/DashboardPage"
 import { ClientDetailPage } from "@/pages/ClientDetailPage"
+import { SettingsPage } from "@/pages/SettingsPage"
 import { AuthCallbackPage } from "@/pages/AuthCallbackPage"
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/clients/:id" element={<ClientDetailPage />} />
+          <Route path="/settings" element={<SettingsPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

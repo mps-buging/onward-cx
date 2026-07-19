@@ -17,8 +17,9 @@ export function useWorkspace() {
         .select("workspace_id")
         .eq("user_id", session.user.id)
         .limit(1)
-        .single()
-        .then(({ data }) => {
+        .maybeSingle()
+        .then(({ data, error }) => {
+          if (error) console.error("useWorkspace:", error.message)
           setWorkspaceId(data?.workspace_id ?? null)
           setLoading(false)
         })
