@@ -3,6 +3,7 @@ import { ProtectedRoute } from "@/components/ProtectedRoute"
 import { SignupPage } from "@/pages/SignupPage"
 import { LoginPage } from "@/pages/LoginPage"
 import { DashboardPage } from "@/pages/DashboardPage"
+import { ClientDetailPage } from "@/pages/ClientDetailPage"
 import { AuthCallbackPage } from "@/pages/AuthCallbackPage"
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
         <Route path="/auth/callback" element={<AuthCallbackPage />} />
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/clients/:id" element={<ClientDetailPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

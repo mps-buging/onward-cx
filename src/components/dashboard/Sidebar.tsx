@@ -1,14 +1,8 @@
-import { Activity, Moon, Settings, Sun, Users } from "lucide-react"
-import { Link, useLocation } from "react-router-dom"
+import { LayoutDashboard, LogOut, Moon, Settings, Sun } from "lucide-react"
+import { Link, useLocation, useNavigate } from "react-router-dom"
 import { cn } from "@/lib/utils"
+import { supabase } from "@/lib/supabase"
 import type { Theme } from "@/hooks/useTheme"
-
-type NavItem = { icon: React.ElementType; label: string; to?: string }
-
-const navItems: NavItem[] = [
-  { icon: Users, label: "Clients", to: "/dashboard" },
-  { icon: Activity, label: "Activity" },
-]
 
 function NavBtn({
   icon: Icon,
@@ -47,6 +41,12 @@ function NavBtn({
 
 export function Sidebar({ theme, onToggleTheme }: { theme: Theme; onToggleTheme: () => void }) {
   const { pathname } = useLocation()
+  const navigate = useNavigate()
+
+  async function handleLogout() {
+    await supabase.auth.signOut()
+    navigate("/login", { replace: true })
+  }
 
   return (
     <aside className="hidden md:flex w-11 shrink-0 flex-col items-center border-r border-sidebar-border bg-sidebar py-3 gap-1">
@@ -55,18 +55,22 @@ export function Sidebar({ theme, onToggleTheme }: { theme: Theme; onToggleTheme:
       </div>
 
       <nav className="flex flex-1 flex-col items-center gap-1">
-        {navItems.map(({ icon, label, to }) => (
-          <NavBtn key={label} icon={icon} label={label} to={to} active={to === pathname} />
-        ))}
+        <NavBtn
+          icon={LayoutDashboard}
+          label="Dashboard"
+          to="/dashboard"
+          active={pathname === "/dashboard" || pathname.startsWith("/clients")}
+        />
+        <NavBtn icon={Settings} label="Settings" to="/settings" active={pathname === "/settings"} />
       </nav>
 
       <div className="flex flex-col items-center gap-1">
-        <NavBtn icon={Settings} label="Settings" />
         <NavBtn
           icon={theme === "dark" ? Sun : Moon}
           label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
           onClick={onToggleTheme}
         />
+        <NavBtn icon={LogOut} label="Log out" onClick={handleLogout} />
       </div>
     </aside>
   )

@@ -53,7 +53,7 @@ export function DashboardPage() {
               Loading…
             </div>
           ) : clients.length === 0 ? (
-            <EmptyState />
+            <EmptyState onAdd={() => setModalOpen(true)} />
           ) : (
             <div
               className="grid gap-4"

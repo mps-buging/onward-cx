@@ -1,37 +1,41 @@
-import { Activity, Settings, Users } from "lucide-react"
-import { Link, useLocation } from "react-router-dom"
+import { LayoutDashboard, LogOut, Settings } from "lucide-react"
+import { Link, useLocation, useNavigate } from "react-router-dom"
 import { cn } from "@/lib/utils"
-
-type NavItem = { icon: React.ElementType; label: string; to?: string }
-
-const navItems: NavItem[] = [
-  { icon: Users, label: "Clients", to: "/dashboard" },
-  { icon: Activity, label: "Activity" },
-  { icon: Settings, label: "Settings" },
-]
+import { supabase } from "@/lib/supabase"
 
 export function BottomNav() {
   const { pathname } = useLocation()
+  const navigate = useNavigate()
+
+  async function handleLogout() {
+    await supabase.auth.signOut()
+    navigate("/login", { replace: true })
+  }
+
+  const linkCls = (active: boolean) =>
+    cn(
+      "flex flex-col items-center justify-center gap-0.5 rounded-md px-3 py-1.5 text-xs transition-colors",
+      active ? "text-foreground" : "text-muted-foreground"
+    )
+
+  const dashActive = pathname === "/dashboard" || pathname.startsWith("/clients")
 
   return (
     <nav className="md:hidden flex h-14 shrink-0 items-center justify-around border-t border-border bg-background px-2">
-      {navItems.map(({ icon: Icon, label, to }) => {
-        const active = to === pathname
-        const cls = cn(
-          "flex flex-col items-center justify-center gap-0.5 rounded-md p-2 transition-colors",
-          active ? "text-foreground" : "text-muted-foreground"
-        )
+      <Link to="/dashboard" className={linkCls(dashActive)}>
+        <LayoutDashboard className="size-5" />
+        <span>Dashboard</span>
+      </Link>
 
-        return to ? (
-          <Link key={label} to={to} className={cls} title={label}>
-            <Icon className="size-5" />
-          </Link>
-        ) : (
-          <button key={label} type="button" title={label} className={cls}>
-            <Icon className="size-5" />
-          </button>
-        )
-      })}
+      <Link to="/settings" className={linkCls(pathname === "/settings")}>
+        <Settings className="size-5" />
+        <span>Settings</span>
+      </Link>
+
+      <button type="button" onClick={handleLogout} className={linkCls(false)}>
+        <LogOut className="size-5" />
+        <span>Log out</span>
+      </button>
     </nav>
   )
 }
