@@ -13,14 +13,11 @@ export function useWorkspace() {
       }
 
       supabase
-        .from("workspace_members")
-        .select("workspace_id")
-        .eq("user_id", session.user.id)
-        .limit(1)
-        .maybeSingle()
+        .rpc("get_user_workspace_ids")
         .then(({ data, error }) => {
           if (error) console.error("useWorkspace:", error.message)
-          setWorkspaceId(data?.workspace_id ?? null)
+          const ids = data as string[] | null
+          setWorkspaceId(ids?.[0] ?? null)
           setLoading(false)
         })
     })

@@ -29,7 +29,7 @@ export function BottomNav() {
         <span>Dashboard</span>
       </Link>
 
-      <Link to="/settings" className={btnCls(pathname === "/settings")}>
+      <Link to="/settings/templates" className={btnCls(pathname.startsWith("/settings"))}>
         <Settings className="size-5" />
         <span>Settings</span>
       </Link>

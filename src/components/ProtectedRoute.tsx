@@ -7,10 +7,11 @@ export function ProtectedRoute() {
   const [authed, setAuthed] = useState(false)
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setAuthed(!!session)
       setLoading(false)
     })
+    return () => subscription.unsubscribe()
   }, [])
 
   if (loading) return null

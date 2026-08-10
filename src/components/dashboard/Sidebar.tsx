@@ -65,8 +65,8 @@ export function Sidebar() {
         <NavBtn
           icon={Settings}
           label="Settings"
-          to="/settings"
-          active={pathname === "/settings"}
+          to="/settings/templates"
+          active={pathname.startsWith("/settings")}
         />
       </nav>
 
