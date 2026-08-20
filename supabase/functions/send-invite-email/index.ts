@@ -5,7 +5,7 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 }
 
-function renderInviteEmail(opts: { workspaceName: string; role: string; link: string }) {
+function renderInviteEmailHtml(opts: { workspaceName: string; role: string; link: string }) {
   return `
     <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 480px; margin: 0 auto; padding: 32px 24px;">
       <p style="font-size: 15px; color: #0a0a0a; margin: 0 0 16px;">
@@ -20,6 +20,16 @@ function renderInviteEmail(opts: { workspaceName: string; role: string; link: st
       </p>
     </div>
   `
+}
+
+function renderInviteEmailText(opts: { workspaceName: string; role: string; link: string }) {
+  return [
+    `You've been invited to join ${opts.workspaceName} on Onward as ${opts.role === "admin" ? "an admin" : "a member"}.`,
+    "",
+    `Accept your invite: ${opts.link}`,
+    "",
+    "If you weren't expecting this, you can ignore this email.",
+  ].join("\n")
 }
 
 Deno.serve(async (req) => {
@@ -99,7 +109,12 @@ Deno.serve(async (req) => {
         from: "Onward <invites@onward.cx>",
         to: invite.email,
         subject: `You've been invited to join ${workspaceName} on Onward`,
-        html: renderInviteEmail({
+        html: renderInviteEmailHtml({
+          workspaceName,
+          role: invite.role,
+          link: linkData.properties.action_link,
+        }),
+        text: renderInviteEmailText({
           workspaceName,
           role: invite.role,
           link: linkData.properties.action_link,
