@@ -10,7 +10,7 @@ import {
   DialogDescription,
   DialogClose,
 } from "@/components/ui/dialog"
-import { supabase } from "@/lib/supabase"
+import { supabase, describeFunctionError } from "@/lib/supabase"
 
 type Props = {
   open: boolean
@@ -77,7 +77,9 @@ export function InviteMemberModal({ open, onOpenChange, workspaceId, existingEma
     })
 
     if (emailErr) {
-      setError(`Invite created, but the email failed to send: ${emailErr.message}. You can resend it from the pending invites list.`)
+      setError(
+        `Invite created, but the email failed to send: ${await describeFunctionError(emailErr)}. You can resend it from the pending invites list.`
+      )
       setSaving(false)
       return
     }

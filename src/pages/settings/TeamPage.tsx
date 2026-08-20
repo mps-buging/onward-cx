@@ -14,7 +14,7 @@ import {
   DialogClose,
 } from "@/components/ui/dialog"
 import { useWorkspace } from "@/hooks/useWorkspace"
-import { supabase } from "@/lib/supabase"
+import { supabase, describeFunctionError } from "@/lib/supabase"
 
 type Member = { user_id: string; email: string; role: string; created_at: string }
 type Invite = { id: string; email: string; role: string; created_at: string }
@@ -102,7 +102,7 @@ export function TeamPage() {
       body: { inviteId: invite.id },
     })
     setResendingId(null)
-    if (sendErr) setResendError(sendErr.message)
+    if (sendErr) setResendError(await describeFunctionError(sendErr))
   }
 
   const existingEmails = members.map((m) => m.email).concat(invites.map((i) => i.email))
