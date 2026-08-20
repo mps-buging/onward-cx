@@ -60,10 +60,15 @@ Deno.serve(async (req) => {
       .single()
 
     if (inviteErr || !invite) {
-      return new Response(JSON.stringify({ error: "Invite not found or not permitted" }), {
-        status: 403,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      })
+      console.error("invites select failed", { inviteId, inviteErr })
+      return new Response(
+        JSON.stringify({
+          error: inviteErr
+            ? `Invite lookup failed: ${inviteErr.message} (${inviteErr.code ?? "no code"})`
+            : "Invite not found or not permitted",
+        }),
+        { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      )
     }
 
     const supabaseAdmin = createClient(supabaseUrl, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!)
