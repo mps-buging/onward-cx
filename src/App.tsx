@@ -8,6 +8,7 @@ import { ClientDetailPage } from "@/pages/ClientDetailPage"
 import { AuthCallbackPage } from "@/pages/AuthCallbackPage"
 import { TemplateListPage } from "@/pages/settings/TemplateListPage"
 import { TemplateBuilderPage } from "@/pages/settings/TemplateBuilderPage"
+import { TeamPage } from "@/pages/settings/TeamPage"
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <Route path="/settings/templates" element={<TemplateListPage />} />
           <Route path="/settings/templates/new" element={<TemplateBuilderPage />} />
           <Route path="/settings/templates/:id/edit" element={<TemplateBuilderPage />} />
+          <Route path="/settings/team" element={<TeamPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dialog"
 import { useWorkspace } from "@/hooks/useWorkspace"
 import { supabase } from "@/lib/supabase"
+import { SettingsTabs } from "@/components/settings/SettingsTabs"
 
 type TemplateRow = {
   id: string
@@ -100,6 +101,8 @@ export function TemplateListPage() {
             New Template
           </Button>
         </header>
+
+        <SettingsTabs />
 
         <main className="flex-1 overflow-y-auto p-4 md:p-6">
           {loading || wsLoading ? (

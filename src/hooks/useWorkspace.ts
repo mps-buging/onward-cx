@@ -3,6 +3,7 @@ import { supabase } from "@/lib/supabase"
 
 export function useWorkspace() {
   const [workspaceId, setWorkspaceId] = useState<string | null>(null)
+  const [role, setRole] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -17,11 +18,28 @@ export function useWorkspace() {
         .then(({ data, error }) => {
           if (error) console.error("useWorkspace:", error.message)
           const ids = data as string[] | null
-          setWorkspaceId(ids?.[0] ?? null)
-          setLoading(false)
+          const id = ids?.[0] ?? null
+          setWorkspaceId(id)
+
+          if (!id) {
+            setLoading(false)
+            return
+          }
+
+          supabase
+            .from("workspace_members")
+            .select("role")
+            .eq("workspace_id", id)
+            .eq("user_id", session.user.id)
+            .maybeSingle()
+            .then(({ data: member, error: roleErr }) => {
+              if (roleErr) console.error("useWorkspace:", roleErr.message)
+              setRole(member?.role ?? null)
+              setLoading(false)
+            })
         })
     })
   }, [])
 
-  return { workspaceId, loading }
+  return { workspaceId, role, loading }
 }
