@@ -51,7 +51,10 @@ export function AuthForm({ mode }: { mode: Mode }) {
     })
 
     if (error) {
-      setError(error.message)
+      // Some failure modes (e.g. an SMTP-level send error) come back from
+      // supabase-js without a usable message — fall back to something readable.
+      const message = error.message?.trim()
+      setError(message && message !== "{}" ? message : "Something went wrong sending the magic link. Please try again.")
     } else {
       setSent(true)
     }
