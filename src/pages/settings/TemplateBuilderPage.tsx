@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Sidebar } from "@/components/dashboard/Sidebar"
 import { BottomNav } from "@/components/dashboard/BottomNav"
-import { useWorkspace } from "@/hooks/useWorkspace"
+import { useWorkspace } from "@/context/WorkspaceContext"
 import { supabase } from "@/lib/supabase"
 
 type SubtaskDraft = { key: string; title: string }

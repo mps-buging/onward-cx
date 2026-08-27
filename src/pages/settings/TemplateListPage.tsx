@@ -12,7 +12,7 @@ import {
   DialogDescription,
   DialogClose,
 } from "@/components/ui/dialog"
-import { useWorkspace } from "@/hooks/useWorkspace"
+import { useWorkspace } from "@/context/WorkspaceContext"
 import { supabase } from "@/lib/supabase"
 import { SettingsTabs } from "@/components/settings/SettingsTabs"
 

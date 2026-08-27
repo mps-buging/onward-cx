@@ -13,7 +13,7 @@ import {
   DialogDescription,
   DialogClose,
 } from "@/components/ui/dialog"
-import { useWorkspace } from "@/hooks/useWorkspace"
+import { useWorkspace } from "@/context/WorkspaceContext"
 import { supabase, describeFunctionError } from "@/lib/supabase"
 
 type Member = { user_id: string; email: string; role: string; created_at: string }

@@ -7,7 +7,7 @@ import { ClientCard } from "@/components/dashboard/ClientCard"
 import { EmptyState } from "@/components/dashboard/EmptyState"
 import { AddClientModal } from "@/components/dashboard/AddClientModal"
 import { useThemeContext } from "@/context/ThemeContext"
-import { useWorkspace } from "@/hooks/useWorkspace"
+import { useWorkspace } from "@/context/WorkspaceContext"
 import { useClients } from "@/hooks/useClients"
 
 export function DashboardPage() {
